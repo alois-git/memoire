@@ -1,0 +1,16 @@
+Use wireshark on console :
+
+tshark -i interface -w filename
+
+Or use tcpdump and do :
+
+tcpdump -i interface -w mycap.cap 
+tcpdump -s0 -i any -w /tmp/name.pcap (-s0 for the linux cooked format for mptcptrace)
+
+tcpdump -n -B 4096 -s0 -i any -w /tmp/name.pcap (set buffer to 4096 and dismiss dns request)
+
+Than analyse with wireshark
+
+MPTCP trace generate csv and xplot file the subflow are numerated from 0 to n but in the csv and xplot file they are in reverse order : 1 = n
+
+also apply prepareDotsOnly on all the csv and then use appropriate script ./sequence ./gput depending on the kind of csv (kind = file name)

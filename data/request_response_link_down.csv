@@ -1,0 +1,5 @@
+Test Name,Concurrency Level,Requests per second [#/sec] (mean),Time per request [ms] (mean),Time per request [ms] (mean, across all concurrent requests),Transfer rate [Kbytes/sec]'
+tcp_8_1,6,867.43,6.917,1.153,414.72
+tcp_32_1,6,849.16,7.066,1.178,405.98
+udp_8_1,6,1006.52,5.961,0.994,481.12
+udp_32_1,6,1127.88,5.320,0.887,539.14

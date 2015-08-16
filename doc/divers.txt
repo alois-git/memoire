@@ -1,0 +1,76 @@
+OPENVPN Client on openWRT:
+
+start openvpn on openwrt:
+
+/usr/sbin/openvpn --config /etc/openvpn/client.conf > /dev/null 2>&1 & 
+
+forward traffic throw openvpn to the VPN:
+
+go to the web interface and select vpn0 firewall rule and into inter zone forwarding and check the lan in both direction.
+
+OPENVPN Server:
+
+forward trafficu (pas utile finalement):
+ipv4 forward => 1 ( /etc/sysctl.conf )
+iptables -A FORWARD -i eth0 -o tun0 -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -s 10.9.8.0/24 -o eth0 -j ACCEPT
+iptables -t nat -A POSTROUTING -s 10.9.8.0/24 -o eth0 -j MASQUERADE
+
+Divers:
+
+mpstat:
+
+mpstat 5 (check every 5 sec)
+
+MTU check:
+ ip link show dev tun0
+
+SpeedTest avec netperf:
+
+lancer le server netperf : sudo netserver 192.168. -p 5678
+lancer le client : netperf -H ip -f M -c -C -l 15 -F fichier 
+
+
+ping pour le mtu:
+
+ping -M do -c -1 -s mtuvalue 10.9.8.1
+
+list routing table :
+
+route -n
+
+traceroute <ip>
+
+
+OpenVPN optimizine speed on gigabit network:
+
+1) disable encryption (cipher none)
+Confidentiality or privacy:
+The data cannot be seen in a readable format.
+Typical symmetric cipher algorithm: DES, 3DES, AES, Blowfish
+Integrity:
+The data cannot be altered.
+Typical hash-functions algorithms: sha1, md5
+2) disable authentification (auth none)
+Authentication:
+The VPN gateways are sure about the identity of the other.
+Typical algorithm: RSA, DH 
+
+
+
+- la connexion TCP (à l'intérieur de la connexion TCP openVPN) n'a aucune idée de la congestion
+
+8mbit/sec = 1Mbps = 1000000 bps
+
+(1000000/8) * delay * 2 = buffer size in Kbyte
+
+--mssfix is only for TCP streams and is used to tell tcp traffic what it's
+> MTU/MSS size should be to not frag when passing through OpenVPN, even
+> though, if it does not adhere to the request, it will still be properly
+> managed thanks to OpenVPN. Again, this option is there so the client can
+> send/receive packets that will not need to be processed by --fragment :).
+
+Exactly.  --mssfix advises the TCP layer to use packet sizes small enough to
+avoid fragmentation.  --fragment deals with the packets that come through that
+do require fragmentation (such as non-TCP protocols).
+

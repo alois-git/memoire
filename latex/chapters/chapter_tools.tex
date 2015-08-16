@@ -1,0 +1,56 @@
+ \section{Measurement tools}
+
+  Here are the main tools used to gather and validate test data.
+
+  \begin{itemize}
+    \item Netperf and flent (netperf-wrapper) to measure the throughput
+    \item Netperf and apache benchmark (AB) to measure request/response performance
+    \item MPstat to check the CPU usage of the router and server
+    \item Wireshark and TCPdump to capture packets
+    \item MPTCTrace and TCPTrace to analyse captures
+  \end{itemize}
+
+  \subsection{netperf \autocite{netperf}}
+  Netperf is a tool measuring network performance, compatible with TCP and UDP protocol. It has a client
+  and a server. The server is netserver and listen to any client request and the client is used to iniate network test with the server.
+
+  When you execute Netperf, the first thing that will happen is the establishment of a control connection to the remote system. This connection will be used to pass test configuration information and results to and from the remote system. Regardless of the type of test being run, the control connection will be a TCP connection using BSD sockets.
+
+  Once the control connection is up and the configuration information has been passed, a separate connection will be opened for the measurement itself using the APIs and protocols appropriate for the test. The test will be performed, and the results will be displayed.
+  Netperf places no traffic on the control connection while a test is in progress
+
+  \subsection{flent (netperf-wrapper) \autocite{flent}}
+
+  Netperf-wrapper, freshly called flent is a Python wrapper to run multiple simultaneous netperf/iperf/ping instances and aggregate the results. Tests are written in config files,
+  test can be run several time using iterated tests. The results are saved into a JSON format to be processed later and multiple format can be choosen.
+
+  It can also generate graphics like plotbox and cdf into different formats with the help of matplotlib. A batchfile can be writtent to automate test execution,
+  This feature is very powerfull and I used it to perform multiple tests and adapt the bandwidth limit / delay on links.
+
+  \subsection{mpstat}
+
+  I used mpstat to check the CPU usage on the router. I wanted to identify the bootleneck which was limiting the bandwitdh
+  and indeed it was using 100\% of the CPU when transmitting data throw the VPN.
+
+  \subsection{Wireshark and TCPdump}
+
+  TCPdump have been use to sniff packets that will later be analyse with MPTCPTrace and TCPTrace.
+
+  Wireshark have been used make sure that the MPTCP protocol is in used during the tests,
+  looking at MPTCP options like MP\_CAPABLE option, ADD\_ADDR option and MP\_JOIN.
+
+  \subsection{MPTCPTrace \autocite{Hesmans:2014:TMT:2619239.2631453}}
+
+  I used MPTCPTrace to analyse pcap captured by tcpdump on the server side and get more information about the MPTCP connection.
+  I have used many of the graph produced by mptcptrace :
+
+  \begin{itemize}
+    \item The sequence graph to get an idea on how the traffic was distributed accross the different subflows and see if packets losses were happening
+    \item The goodput graph to see how many goodput we could get and cross verify with the one from netperf.
+    \item The flight and flight per flow graph to see the size of the TCP window
+  \end{itemize}
+
+  \subsection{TCPTrace \autocite{tcptrace}}
+
+  To analyse the captured packets in more detail, I also used tcptrace. It was very helpfull to look at the sequence number graph of each subflow and
+  see the packet lost on capture from the tun interface.

@@ -1,0 +1,9 @@
+Source : astel.be
+
+4mbps (edpnet)
+30 mbps (voo telenet)
+40 mpbs (voo)
+50 mpbs (belgacom voo)
+100mbps (telenet numericable voo) 
+120mpbs (voo)
+200mpbs (numericable telenet)

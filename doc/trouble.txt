@@ -1,0 +1,17 @@
+
+Traffic shaping:
+
+First tried to use the technicolor router but it didn't have any repo for installing package and you could not recompile the kernel to add missing kernel module needed by tc.
+
+Then Using a TP-WR741nd as a traffic shaper I encoured some problem during the configuration.
+
+1) Tried on all same interface eth0 (br-lan) and applying tc on eth0, but the speed was not limited, I guess it is because computer could talk directly.
+
+2) Tried to create a bridge between two virtual interface (vlan) and limit these two vlan with tc (ex: eth0.1 eth0.2) this would normally work but :
+- I read on openwrt forum and bug report that some hardware switch from some router were not capable of doing that. Indeed I was not getting the ARP response back to the router.
+I made a post on the forum , https://forum.openwrt.org/viewtopic.php?id=56866 and found many bug report :
+https://dev.openwrt.org/ticket/8701
+https://dev.openwrt.org/ticket/8653
+https://dev.openwrt.org/ticket/7955
+
+3)  I bridged eth0 (the switch for lan) and eth1 (wan interface) together and I applied tc qdisc rule on eth0 and eth1. this worked well

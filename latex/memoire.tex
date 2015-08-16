@@ -1,0 +1,186 @@
+\documentclass[a4paper, 12pt]{report}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[Conny]{fncychap}
+\usepackage{enumerate}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{import}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{url}
+\usepackage[backend=bibtex]{biblatex}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{calc, shadings, shadows, shapes.arrows, chains}
+
+% Numbers and units
+\usepackage[squaren, Gray]{SIunits}
+\usepackage{sistyle}
+\usepackage[autolanguage]{numprint}
+\usepackage{fullpage}
+\usepackage{hyperref}
+\usepackage{multirow}
+\usepackage{xparse}
+\usepackage{enumitem}
+\usepackage{amsmath}
+
+\bibliography{./biblio}
+
+\setlength{\parskip}{1em}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+backgroundcolor=\color{backcolour},
+commentstyle=\color{codegreen},
+keywordstyle=\color{magenta},
+numberstyle=\tiny\color{codegray},
+stringstyle=\color{codepurple},
+basicstyle=\footnotesize,
+breakatwhitespace=false,
+breaklines=true,
+captionpos=b,
+keepspaces=true,
+numbers=left,
+numbersep=5pt,
+showspaces=false,
+showstringspaces=false,
+showtabs=false,
+tabsize=2
+}
+
+% Styles for interfaces and edge labels
+\tikzset{%
+interface/.style={draw, rectangle,font=\tiny},
+ethernet/.style={interface, fill=yellow!50},% ethernet interface
+speed/.style={anchor=south, font=\tiny},% line speed at edge
+route/.style={draw, shape=single arrow, single arrow head extend=2mm,
+minimum height=1cm, width=2cm, white, fill=blue!20,
+drop shadow={opacity=.8, fill=blue!50!black}, font=\tiny}% inroute / outroute arrows
+}
+
+\lstset{style=mystyle}
+
+\newcommand*{\captionsource}[2]{%
+  \caption[{#1}]{%
+    #1%
+    \\ \textbf{Source:} #2%
+  }%
+}
+
+\newcommand*{\shift}{1.3cm}% For placing the arrows later
+
+\newcommand\si[2]{\numprint[#2]{#1}}
+\newcommand\np[1]{\numprint{#1}}
+
+\newcommand\figref[1]{figure~\ref{fig:#1}}
+
+\NewDocumentEnvironment{myfig}{mm}
+{\begin{figure}[!ht]\centering}
+{\caption{#2}\label{#1}\end{figure}}
+
+%%%% SPACING %%%%
+\renewcommand{\baselinestretch}{1.3}
+\headsep = 10.mm
+%%%% CHOOSE MARGINS %%%%
+\usepackage{geometry}
+\geometry{hmargin=2.5cm,top=3cm,bottom=2.3cm}
+%%%% COMMANDS %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CHANGE HERE %%%%
+\renewcommand\title{Multipath TCP and OpenVPN}
+\newcommand\name{Alois Paulus \textsc{}}
+\newcommand\options{}
+\newcommand\supervisor{ \textsc{}}
+\newcommand\readerone{ \textsc{}}
+\newcommand\readertwo{ \textsc{}}
+\newcommand\years{20..-20..}
+%%%% BEGIN %%%%
+
+\begin{document}
+
+  \nocite{*}
+
+  %%%% COVER %%%%
+  \thispagestyle{empty}
+  \noindent\begin{minipage}{.25\textwidth}
+  \noindent\includegraphics[width=3.6cm]{./images/ucl.jpg}
+  \end{minipage}
+  \begin{minipage}{.5\textwidth}
+  \begin{center}
+  UNIVERSITE CATHOLIQUE DE LOUVAIN
+  \\~\\~
+  ECOLE POLYTECHNIQUE DE LOUVAIN
+  \\~\\~\\~\\~\\~
+  \end{center}
+  \end{minipage}
+  \begin{minipage}{.25\textwidth}
+  \hfill\includegraphics[width=3.6cm]{./images/epl.jpg}
+  \\~\\~\\~\\~
+  \end{minipage}
+  \vspace{4.5cm}
+  \begin{center}
+  \bfseries{\scshape{\Huge{\title}}}
+  \end{center}
+  \vspace{4.5cm}
+  \begin{minipage}{.5\textwidth}
+  \begin{tabular}{ll}
+  Supervisor: Olivier Bonaventure & \supervisor
+  \\ Readers: Gregory Detal & \readerone
+  \\          Marc Lobelle & \readertwo
+  \end{tabular}
+  \\~\\~
+  \end{minipage}
+  \begin{minipage}{.5\textwidth}
+  \begin{tabular}{l}
+  Thesis submitted for the Master's degree
+  \\ in computer science and engineering
+  \\ options: SINF2M1
+  \\ by Alois Paulus
+  \end{tabular}
+  \end{minipage}
+  \vfill
+  \begin{center}
+  Louvain-la-Neuve
+  \\ Academic year 2014-2015
+  \end{center}
+  %%%% END COVER %%%%
+
+  \newpage
+
+  \tableofcontents
+
+  \newpage
+
+
+ \chapter{Introduction}
+ \input{chapters/chapter1_introduction}
+
+ \chapter{Setup}
+ \input{chapters/chapter2_setup}
+
+ \chapter{Tests results}
+ \input{chapters/chapter3_test_result}
+
+ \chapter{Improving performance}
+ \input{chapters/chapter4_improving_tcp}
+
+ \chapter{Tools}
+ \input{chapters/chapter_tools}
+
+ \chapter{Conclusion}
+ \input{chapters/chapter_conclusion}
+
+ \printbibliography
+
+ \appendix
+  \chapter{Annexes}
+  \input{chapters/annexes}
+
+\end{document}

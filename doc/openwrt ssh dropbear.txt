@@ -1,0 +1,19 @@
+To access the delay boxes I access them via the router
+
+setup all ssh key so you don't need to type a password
+
+!!! SSH file are in /etc/dropbear and not in .ssh/ !!!
+
+1) Convert the dropbear rsa key to a public rsa key:
+   dropbearkey -y -f /etc/dropbear/dropbear_rsa_host_key | grep ssh-rsa > /etc/dropbear/dropbear_rsa_host_key.pub
+
+2) Add the public key to authorize keys to the other router:
+   cat /etc/dropbear/dropbear_rsa_host_key.pub | ssh 192.168.22.2 "cat >> /etc/dropbear/authorized_keys" 
+
+3) Acces the delay boxes from the router using the ssh key :
+   ssh -i /etc/dropbear/dropbear_rsa_host_key root@192.168.22.2
+
+
+
+
+

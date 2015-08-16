@@ -1,0 +1,27 @@
+
+
+  In conclusion, results of the tests show that providing a robust and fast internet connection to compagnies and individuals using MPTCP coupled with OpenVPN is something possible.
+
+  The setup is minimal and not too expensive. The elements needed are two or more internet connections, a router running a MPTCP compatible kernel for the OpenVPN client and
+  a server running a MPTCP compatible kernel for the OpenVPN server having a high bandwith.
+
+  The basic configuration is simple but can be more complicated if the goal is to achieve good performances and try to maximize the speed of the internet connection.
+
+  In term of performance, the hardware need to be powerfull enough otherwise the throughput will be limited by OpenVPN and its intensive
+  use of the CPU to encapsulate and decapsulate packets. Here with the TP-LINK N900 router the maximum throughput it could reach was 57mbit/s before the CPU was saturated, with
+  nowdays internet connection going up to 100mbit/s, this limit is not very high.
+
+  In this paper we saw that using OpenVPN with MPTCP on links having low bandwith delay product gives good performance.
+  However using links with high bandwith delay product decrease the performances.
+  In some cases the use of MPTCP is not even worth it, UDP as the OpenVPN protocol would be a better choice in term of performances if we ommit the fact that it is less robust against failure.
+
+  I have investigated and tried to solve the problem concerning the high bandwith delay product links with some level of success by adjusting the
+  TCP windows size on both OpenVPN end side and trying different congestion algorithms.
+  The performances were increased in every cases but depending on the configuration it was more or less significant.
+
+  This being said, it will require internet connections to have a low RTT between the OpenVPN client and the OpenVPN server to get an acceptable user experience.
+  Normal VDSL or ADSL connections should be adequate but mobile internet connection (3G) or sattelite internet connection will not be suitable for this kind of setup.
+
+  Finally all the tests in this paper were done in a closed lab environnement. An interesting thing to do would be to try that in the real world environnement over the internet, to determine
+  if additional problems than the ones represented in these experimental tests are encountered, potentially making the use of MPTCP coupled with OpenVPN not a viable solution.
+  Another interesting thing would be to try using a different technology than OpenVPN and test if it would give better performances.

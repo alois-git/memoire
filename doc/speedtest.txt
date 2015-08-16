@@ -1,0 +1,24 @@
+download test :
+
+netperf-wrapper tcp_download -H 10.9.8.1 
+
+upload test :
+
+netperf-wrapper tcp_upload -H 10.9.8.1
+
+download/upload test:
+
+netperf-wrapper tcp_bidirectional -H 10.9.8.1 -f stats 
+
+buffer size:
+
+buffer = bandwidth x latency (10mbps and 100ms latency = 125k buffer size)
+
+set buffer size : ifconfig eth0 txqueuelen 2
+
+uci config system buffersize
+
+
+Large buffer can be bad because when you put the packet into the buffer to avoid dropped packets that require retransmission (expensive in term of time). By doing that we screw up the tcp flow control because tcp require dropped packets to know if it send the data at a good speed or not.
+
+If no packet are drop, the server will sends as fast as it can and if the amount of data held in buffers is more than the client can process in the expected Round-Trip Time (RTT) from the server and back, then TCP’s flow control simply stops working. The server runs like a bat out of Hell. This might be okay on a very lightly-loaded network or on a network with only two nodes (server and client) but our average Internet connection today is about 15 hops, meaning there are 13 other points of possible congestion between the server and the client. TCP flow control normally operates on all of those interim nodes, but not if bufferbloat circumvents flow control. The result is network congestion that happens at some interim node and, because TCP flow control isn’t working, we have no way of knowing which node is having the problem. So network latency drops from milliseconds to seconds (see the chart above), the connection eventually fails, the buffers are all drained, then your Netflix or Hulu client begs for patience while it tries to reestablish a connection that shouldn’t have failed in the first place.

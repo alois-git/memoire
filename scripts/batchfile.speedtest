@@ -1,0 +1,197 @@
+# -*- mode:conf -*-
+[Command::delaybox1_qdisc_clear]
+exec = ./delaybox_qdisc_clear.sh ${delay_box_1} 
+type = pre
+essential = yes
+
+[Command::delaybox2_qdisc_clear]
+exec = ./delaybox_qdisc_clear.sh ${delay_box_2}
+type = pre
+essential = yes
+
+[Command::delaybox1_qdisc_setup]
+exec = ./delaybox_qdisc_setup.sh ${delay_box_1} ${rate_link_1} ${delay_1}
+type = pre
+essential = yes
+
+[Command::delaybox2_qdisc_setup]
+exec = ./delaybox_qdisc_setup.sh ${delay_box_2} ${rate_link_2} ${delay_2}
+type = pre
+essential = yes
+
+[Command::start_netperf_server]
+exec = ./server_start_netperf.sh  ${server_interface1_ip}
+type = pre
+essential = yes
+
+[Command::change_openvpn_proto]
+exec = ./change_openvpn_protocol.sh ${protocol} ${router_ip} ${server_interface1_ip}
+type = pre
+essential = yes
+
+[Command::wait_openvpn_status]
+exec = ./wait_openvpn_status.sh ${router_ip} 
+type = pre
+essential = yes
+
+[Command::start_capture]
+exec = ./capture_start_server.sh ${protocol} ${rate_link_1} ${rate_link_2} ${delay_1} ${delay_2}
+type = pre
+	
+[Command::change_buffer_size]
+exec = ./change_buffer_size.sh  ${router_ip} ${server_interface1_ip} ${rate_link_1} ${delay_1}
+type = pre
+
+[Command::restart_openvpn]
+exec = ./restart_openvpn.sh  ${router_ip} ${server_interface1_ip}
+type = pre
+essential = yes
+	
+[Batch::global]
+# collect remote metadata
+#remote_metadata = ${vpnserver_hostname} #, ${delaybox_hostname}, ${vpnclientbox_hostname}
+extended_metadata = yes
+title = proto:${protocol} rate:${rate_link_1}/${rate_link_2} delay:${delay_1}/${delay_2}
+output_path = data/batch-${batch_time}/${batch_name}
+filename_extra = ${protocol}-${rate_link_1}/${rate_link_2}-${delay_1}/${delay_2}
+ip_version = 4
+length = 60
+commands =  delaybox1_qdisc_clear,delaybox2_qdisc_clear,start_netperf_server,change_openvpn_proto,restart_openvpn,delaybox1_qdisc_setup, delaybox2_qdisc_setup, wait_openvpn_status
+# 1/4/30 megabytes
+for_bandwidths = 8mbit,32mbit,100mbit
+for_rtts = 50ms,400ms
+for_protocols = tcp
+repetitions = 1
+debug_log = yes
+hosts = 10.9.8.1
+abstract = yes
+#in seconds
+pause = 3 
+server_interface1_ip = 192.168.21.11
+server_interface1_iface = eth0
+server_interface2_ip =  192.168.22.11
+server_interface2_iface = eth1
+vpnserver_ip = 10.9.8.1
+delay_box_1 = 192.168.21.2
+delay_box_2 = 192.168.22.2
+router_ip= 192.168.1.1 
+
+[Batch::tcp_upload]
+inherits = global
+test_name = tcp_upload
+batch_name= tcp_upload
+
+[Batch::tcp_download_without_setup]
+inherits = global
+test_name = tcp_download
+batch_name= tcp_download
+commands =  start_netperf_server
+
+[Batch::tcp_download]
+inherits = global
+test_name = tcp_download
+batch_name= tcp_download
+
+[Batch::tcp_download_custom_buffer]
+inherits = global
+test_name = tcp_download
+batch_name= tcp_download_custom_buffer
+commands =  delaybox1_qdisc_clear,delaybox2_qdisc_clear,start_netperf_server,change_buffer_size,change_openvpn_proto,restart_openvpn,delaybox1_qdisc_setup, delaybox2_qdisc_setup,wait_openvpn_status
+repetitions = 1
+
+[Batch::tcp_download_custom_buffer_capture]
+inherits = global
+test_name = tcp_download
+batch_name= tcp_download_custom_buffer_capture
+commands =  delaybox1_qdisc_clear,delaybox2_qdisc_clear,start_netperf_server,change_buffer_size,change_openvpn_proto,start_capture,restart_openvpn,delaybox1_qdisc_setup,delaybox2_qdisc_setup,wait_openvpn_status 
+repetitions = 1
+
+[Batch::tcp_crr]
+inherits = global
+test_name = tcp_crr
+batch_name= tcp_crr
+
+[Batch::tcp_upload_link_down]
+inherits = global
+test_name = tcp_1up_noping 
+
+[Arg::global]
+qdisc_label = ${qdisc_name}
+rate_up = 1
+delay_1 = 50
+delay_2 = 50
+buffer_size = 16
+
+[Arg::http]
+http_getter_urllist = urllist.txt
+#http_getter_dns = 10.60.5.1
+
+[Arg::google]
+inherits = http
+http_site = google
+
+[Arg::mptcp]
+inherits = http
+http_site = mulipath-tcp
+
+[Arg::8mbit]
+rate_link_1 = 8
+rate_link_2 = 8
+
+[Arg::100mbit]
+rate_link_1 = 100 
+rate_link_2 = 100 
+
+[Arg::32mbit]
+rate_link_1 = 32	
+rate_link_2 = 32
+
+[Arg::8_32mbit]
+rate_link_1 = 8	
+rate_link_2 = 32
+
+[Arg::32_8mbit]
+rate_link_1 = 32
+rate_link_2 = 8
+
+[Arg::100_8mbit]
+rate_link_1 = 100
+rate_link_2 = 8
+
+[Arg::2ms]
+delay_1 = 1
+delay_2 = 1
+
+[Arg::50ms]
+delay_1 = 25
+delay_2 = 25
+
+[Arg::400ms]
+delay_1 = 200
+delay_2 = 200
+
+[Arg::2ms_400ms]
+delay_1 = 1
+delay_2 = 200
+
+[Arg::400ms_2ms]
+delay_1 = 200
+delay_2 = 1
+
+[Arg::1ms_50ms]
+delay_1 = 1
+delay_2 = 25
+
+[Arg::50ms_400ms]
+delay_1 = 25
+delay_2 = 200
+
+[Arg::50ms_2ms]
+delay_1 = 25
+delay_2 = 1
+
+[Arg::tcp]
+protocol = tcp
+
+[Arg::udp]
+protocol = udp

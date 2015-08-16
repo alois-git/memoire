@@ -1,0 +1,24 @@
+./delaybox_qdisc_setup.sh 192.168.21.2 240 25: insmod: can't insert 'sch_tbf': File exists
+insmod: can't insert 'sch_netem': File exists
+clearing qdisc
+removing any qdisc on interfaces
+setup qdisc
+
+./delaybox_qdisc_setup.sh 192.168.22.2 8 1: insmod: can't insert 'sch_tbf': File exists
+insmod: can't insert 'sch_netem': File exists
+clearing qdisc
+removing any qdisc on interfaces
+setup qdisc
+
+./delaybox_qdisc_setup.sh 192.168.21.2 240 25: insmod: can't insert 'sch_tbf': File exists
+insmod: can't insert 'sch_netem': File exists
+clearing qdisc
+removing any qdisc on interfaces
+setup qdisc
+
+./delaybox_qdisc_setup.sh 192.168.22.2 8 1: insmod: can't insert 'sch_tbf': File exists
+insmod: can't insert 'sch_netem': File exists
+clearing qdisc
+removing any qdisc on interfaces
+setup qdisc
+
